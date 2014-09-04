@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+LANKATOOLS=/afs/csail.mit.edu/proj/courses/6.172/bin/
+
+${LANKATOOLS}/lput $1
+
+# ${LANKATOOLS}/lrun $@
+
+# # Create a directory to store the ssh socket
+# SOCKETSDIR=~/.ssh/sockets
+# if [ ! -e ${SOCKETSDIR} ]; then mkdir ${SOCKETSDIR}; fi
+
+# ssh -F /afs/csail.mit.edu/proj/courses/6.172/ssh_config -t ${USER}@lanka.csail.mit.edu \
+#     if [ ! -e /data/scratch/${USER} ]; then mkdir -p /data/scratch/${USER}/${HOSTNAME}; fi; \
+
+# scp -F /afs/csail.mit.edu/proj/courses/6.172/ssh_config \
+#     -r ./count_primes tests/*.csv \
+#     ${USER}@lanka.csail.mit.edu:/data/scratch/${USER}/${HOSTNAME}
+
+# ssh -F /afs/csail.mit.edu/proj/courses/6.172/ssh_config -t \
+#     ${USER}@lanka.csail.mit.edu \
+#     cd /data/scratch/${USER}/${HOSTNAME}\; srun -p mit6172 -N1 --exclusive $@
