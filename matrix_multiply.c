@@ -20,7 +20,8 @@
  * IN THE SOFTWARE.
  **/
 
-// #include "tbassert.h"
+#include "./matrix_multiply.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -31,7 +32,7 @@
 #include <math.h>
 #include <string.h>
 
-#include "./matrix_multiply.h"
+// #include "./tbassert.h"
 
 // Allocates a row-by-cols matrix and returns it
 matrix* make_matrix(int rows, int cols) {
