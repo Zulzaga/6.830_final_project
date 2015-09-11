@@ -33,8 +33,8 @@
 #include <string.h>
 #include <time.h>
 
-#include "fasttime.h"
-#include "matrix_multiply.h"
+#include "./fasttime.h"
+#include "./matrix_multiply.h"
 
 
 int main(int argc, char** argv) {

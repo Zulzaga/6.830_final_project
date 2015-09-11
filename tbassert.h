@@ -63,11 +63,11 @@
 
 #else
 
-#define DEBUG_PRINTF(...) // Nothing.
-#define DEBUG_EPRINTF(...) // Nothing.
-#define DEBUG_ASSERT(...) // Nothing.
-#define tbassert(...) // Nothing.
+#define DEBUG_PRINTF(...)  // Nothing.
+#define DEBUG_EPRINTF(...)  // Nothing.
+#define DEBUG_ASSERT(...)  // Nothing.
+#define tbassert(...)  // Nothing.
 
 #endif
 
-#endif // _TBASSERT_H_
+#endif  // _TBASSERT_H_
