@@ -68,7 +68,7 @@ endif
 all: $(PRODUCT)
 
 # This special "target" will remove the binary and all intermediate files.
-clean:
+clean::
 	rm -f $(OBJ) $(PRODUCT) .buildmode
 
 # This rule generates a list of object names.  Each of your source files (but
