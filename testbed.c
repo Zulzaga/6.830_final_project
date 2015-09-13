@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
 
   fprintf(stderr, "Setup\n");
 
-  A = make_matrix(kMatrixSize, kMatrixSize+1);
+  A = make_matrix(kMatrixSize, kMatrixSize);
   B = make_matrix(kMatrixSize, kMatrixSize);
   C = make_matrix(kMatrixSize, kMatrixSize);
 
@@ -143,5 +143,8 @@ int main(int argc, char** argv) {
     printf("Elapsed execution time: %f sec\n", elapsed);
   }
 
+  free_matrix(A);
+  free_matrix(B);
+  free_matrix(C);
   return 0;
 }
