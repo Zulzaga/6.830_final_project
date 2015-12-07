@@ -75,8 +75,9 @@ public class Tester {
 		for (int i=0; i < 1; i++) {
 		    generateWorkload(workloads);
 		    for (String key_sort : workloads.keySet()) {
-		    	String key = "HashMap20mixed";
+		    	String key = "AVL10000mixed";
 		    	System.out.println("testing " + key);
+		    	System.out.println(workloads.get(key).size());
 		    	ArrayList<Long> rs_times = testWorkload(workloads.get(key));
 		    	System.out.println("time " + rs_times);
 		    	System.exit(0);
@@ -125,7 +126,7 @@ public class Tester {
 	public static ArrayList<ArrayList<RangeScan>> generateWorkload(HashMap<String, ArrayList<RangeScan>> workloads){
 		
 		ArrayList<ArrayList<RangeScan>> queries = new ArrayList<ArrayList<RangeScan>>();
-		Integer[] workload_ranges = {20};
+		Integer[] workload_ranges = {10000};
 		Integer min_lower = 1;
 		Integer max_upper = 100000;
 		Random random = new Random();
@@ -148,14 +149,6 @@ public class Tester {
 				for(int index = 0; index < workload_ranges.length; index++){
 					try {
 						String workload_name = workload_ranges[index].toString();
-						int low = min_lower-1;
-						int high = max_upper; 
-						
-						while(low < min_lower){
-							high = random.nextInt(max_upper-1) + 1;
-							low = random.nextInt(high);
-						}
-
 						String range = null;
 						for (int range_i = 0; range_i < 3; range_i++) {
 							ArrayList<RangeScan> rangeScans = new ArrayList<RangeScan>();
@@ -163,8 +156,16 @@ public class Tester {
 							String name = type_name + workload_name + range_name;
 							String[] given_range = ranges.get(range_i);
 					    	range = given_range[random.nextInt(given_range.length)];
-					    	System.out.println("generating rs for " + name);
+					    	System.out.println("generating rs for " + name + " range " + range);
 					    	for (int work_ind=0; work_ind < workload_ranges[index]; work_ind++) {
+								int low = min_lower-1;
+								int high = max_upper; 
+								
+								while(low < min_lower){
+									high = random.nextInt(max_upper-1) + 1;
+									low = random.nextInt(high);
+								}
+
 					    		rs = new RangeScan(col, low, high, range);
 					    		rangeScans.add(rs);
 					    	}
