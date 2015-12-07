@@ -1,0 +1,45 @@
+!SESSION 2015-12-06 14:09:39.986 -----------------------------------------------
+eclipse.buildId=4.5.0.I20150603-2000
+java.version=1.8.0_60
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product -keyring /Users/zulsarbatmunkh/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -data /Users/zulsarbatmunkh/final_project/code/MiniDB -product org.eclipse.epp.package.java.product -keyring /Users/zulsarbatmunkh/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2015-12-06 14:09:45.403
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY org.eclipse.epp.logging.aeri.ui 1 4 2015-12-06 14:09:56.199
+!MESSAGE The error reporting server is not available. Error reporting will be disabled until next restart. Version: 1.0.0.v20150617-0732
+!STACK 0
+org.eclipse.epp.internal.logging.aeri.ui.l10n.Logs$LogTraceException
+	at org.eclipse.epp.internal.logging.aeri.ui.l10n.Logs$LogTraceException.newTrace(Logs.java:382)
+	at org.eclipse.epp.internal.logging.aeri.ui.l10n.Logs.log(Logs.java:134)
+	at org.eclipse.epp.internal.logging.aeri.ui.l10n.Logs.log(Logs.java:126)
+	at org.eclipse.epp.internal.logging.aeri.ui.log.CheckServerAvailabilityJob.run(CheckServerAvailabilityJob.java:53)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.epp.logging.aeri.ui 4 32 2015-12-06 14:09:56.505
+!MESSAGE Failed to do network communication. Please file a bug with the EPP Logging project (https://bugs.eclipse.org/bugs/enter_bug.cgi?product=EPP&component=logging) along with any information you can provide us with regarding your network settings. Please include the following information which will help us fix this issue: 
+Communication URL: http://download.eclipse.org/stats/technology/epp/logging/network-communication-test/apache/java-1.8.0_60/Mac+OS+X-10.10.3/Direct-none/noProxyHost/noProxyUsername-noProxyPassword/
+Response Code: 404 - Not Found
+Response Headers:
+Date: Sun, 06 Dec 2015 19:09:56 GMT
+Server: Apache
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 33
+Keep-Alive: timeout=5, max=999
+Connection: Keep-Alive
+Content-Type: text/html
+ Version: 1.0.0.v20150617-0732
+!STACK 0
+org.eclipse.epp.internal.logging.aeri.ui.l10n.Logs$LogTraceException
+	at org.eclipse.epp.internal.logging.aeri.ui.l10n.Logs$LogTraceException.newTrace(Logs.java:382)
+	at org.eclipse.epp.internal.logging.aeri.ui.l10n.Logs.log(Logs.java:134)
+	at org.eclipse.epp.internal.logging.aeri.ui.log.NetworkCommunicationTestJob.doApacheHeadRequest(NetworkCommunicationTestJob.java:155)
+	at org.eclipse.epp.internal.logging.aeri.ui.log.NetworkCommunicationTestJob.run(NetworkCommunicationTestJob.java:88)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.core.jobs 2 2 2015-12-06 14:12:45.383
+!MESSAGE Job found still running after platform shutdown.  Jobs should be canceled by the plugin that scheduled them during shutdown: org.eclipse.epp.internal.logging.aeri.ui.log.ProblemsDatabaseUpdateJob
