@@ -1,2 +1,2 @@
-{"column" : "testCol", "range" : "<", "fixed_range" : "None", "min_lower_range" : 1, "max_upper_range" : 50, "num_queries" : 50}
+{"column" : "testCol", "range" : "<", "fixed_range" : "None", "min_lower_range" : 1, "max_upper_range" : 50, "num_queries" : 20}
 

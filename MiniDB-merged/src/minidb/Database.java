@@ -70,10 +70,9 @@ public class Database {
 	/**
 	 * Create and add to the catalog a new Column instance
 	 */
-	public void createSimpleColumnCracking(String colname){
-		SimpleColumn col = new SimpleColumn(colname, true);
+	public void createSimpleColumnCracking(String colname, int index){
+		SimpleColumn col = new SimpleColumn(colname, true, index);
 		Database.getCatalog().put(colname, col);
-		
 	}
 	
 	

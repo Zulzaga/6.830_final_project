@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Random;
 
@@ -65,35 +66,33 @@ public class Tester {
 		populateDB(db);
 		
 		//Test variables, comment out for real command line testing
-		String filename = "/afs/athena.mit.edu/user/z/u/zulsar/MiniDB-merged/MiniDB-merged/src/minidb/testWorkload.json";
-		String destFilename = "/afs/athena.mit.edu/user/z/u/zulsar/MiniDB-merged/MiniDB-merged/src/minidb/Results.txt";
-		
-		//Parse file and get parameters
-		JSONObject params = parseFile(filename);
-		System.out.println(params);
+		String destFilename = "/afs/athena.mit.edu/user/z/u/zulsar/MiniDB-merged/MiniDB-merged/src/minidb/";
+	
 		//Generate queries
-		ArrayList<ArrayList<Long>> times = new ArrayList<ArrayList<Long>>();
+		HashMap<String, ArrayList<RangeScan>> workloads = new HashMap<String, ArrayList<RangeScan>>();
 		
 		//Run queries, record their times
 		for (int i=0; i < 1; i++) {
-		    ArrayList<RangeScan> rscans = generateWorkload(params);
-		    times.add(testWorkload(rscans));
-		    System.out.println("running queries " + i);
-		    //System.out.println(((CrackerIndexHashMap)rscans.get(0).getColumn().getCrackerColumn().crackerIndex).values);
-		    rscans.get(0).getColumn().getCrackerColumn().reset();
-		    //System.out.println(((CrackerIndexHashMap)rscans.get(0).getColumn().getCrackerColumn().crackerIndex).values);
+		    generateWorkload(workloads);
+		    for (String key_sort : workloads.keySet()) {
+		    	String key = "HashMap20mixed";
+		    	System.out.println("testing " + key);
+		    	ArrayList<Long> rs_times = testWorkload(workloads.get(key));
+		    	System.out.println("time " + rs_times);
+		    	System.exit(0);
+		    	try {
+					writeResults(rs_times, destFilename + key + ".txt");
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    }
+		    System.out.println("running times: " + i);
 		}
-		System.out.println(times);
 		//Record results in the file
-		try {
-			writeResults(times, destFilename);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	/**
@@ -123,68 +122,59 @@ public class Tester {
 	 * @param params JSONObject with parameters for workload (see first lines)
 	 * @return array of RangeScan objects
 	 */
-	public static ArrayList<RangeScan> generateWorkload(JSONObject params){
+	public static ArrayList<ArrayList<RangeScan>> generateWorkload(HashMap<String, ArrayList<RangeScan>> workloads){
 		
-		//names of json keys, in case they change
-		String num_queries = "num_queries";
-		String fixed_range = "fixed_range";
-		String min_lower_range = "min_lower_range";
-		String max_upper_range = "max_upper_range";
-		String column = "column";
-		
-		//System.out.print(params.get);
-		ArrayList<RangeScan> queries = new ArrayList<RangeScan>();
-		Integer workloadSize = Integer.parseInt(params.get(num_queries).toString());
-		Integer min_lower = Integer.parseInt(params.get(min_lower_range).toString());
-		Integer max_upper = Integer.parseInt(params.get(max_upper_range).toString());
+		ArrayList<ArrayList<RangeScan>> queries = new ArrayList<ArrayList<RangeScan>>();
+		Integer[] workload_ranges = {20};
+		Integer min_lower = 1;
+		Integer max_upper = 100000;
 		Random random = new Random();
-		//String[] ranges = {"<", ">", "<=", ">=", "<<=", "<=<=", "<<", "<=<"};
-		//String range = (String) params.get(rangeName);
-		//String range = ranges[random.nextInt(8)];
-		String fixedRange = (String) params.get(fixed_range);
-
-		String columnName = (String) params.get(column);
+		String[] single_ranges = {"<", ">", "<=", ">="};
+		String[] double_ranges = {"><=", ">=<=", "><", ">=<"};
+		String[] mixed_ranges = {"<", ">", "<=", ">=", "><=", ">=<=", "><", ">=<"};
+	    ArrayList<String[]> ranges = new ArrayList<String[]>();
+	    ranges.add(single_ranges);
+	    ranges.add(double_ranges);
+	    ranges.add(mixed_ranges);
 		Column col;
-		boolean openRange;
-//		if (range == "<" || range == "<=" || range == ">" || range == ">="){
-//			openRange = true;
-//		}
-//		else{
-//			openRange = false;
-//		}
+		String[] names = {"AVL", "HashMap", "Sorted"};
+		String[] range_names = {"single", "double", "mixed"};
 		try {
-			col = Database.getColumn(columnName);
-			RangeScan rs;
-			for(int i = 0; i < workloadSize; i++){
-
-				try {
-					int low = min_lower-1;
-					int high = max_upper; 
-					
-					while(low < min_lower){
-						high = random.nextInt(max_upper-1) + 1;
-						if (!fixedRange.equals("None")){ //high-low is fixed
-							
-							int difference = Integer.parseInt(fixedRange);
-							low = high-difference;
-						}
-						else{
+			// Looping through each different cracker index type
+			for (int i=0; i<3; i++) {
+				col = Database.getColumn("testCol" + i);
+				RangeScan rs;
+				String type_name = names[i];
+				for(int index = 0; index < workload_ranges.length; index++){
+					try {
+						String workload_name = workload_ranges[index].toString();
+						int low = min_lower-1;
+						int high = max_upper; 
+						
+						while(low < min_lower){
+							high = random.nextInt(max_upper-1) + 1;
 							low = random.nextInt(high);
 						}
+
+						String range = null;
+						for (int range_i = 0; range_i < 3; range_i++) {
+							ArrayList<RangeScan> rangeScans = new ArrayList<RangeScan>();
+							String range_name = range_names[range_i];
+							String name = type_name + workload_name + range_name;
+							String[] given_range = ranges.get(range_i);
+					    	range = given_range[random.nextInt(given_range.length)];
+					    	System.out.println("generating rs for " + name);
+					    	for (int work_ind=0; work_ind < workload_ranges[index]; work_ind++) {
+					    		rs = new RangeScan(col, low, high, range);
+					    		rangeScans.add(rs);
+					    	}
+					    	workloads.put(name, rangeScans);
+					    }
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-					//high = random.nextInt(max_upper - low + 1) + low;
-					//low = random.nextInt(high - 1 - min_lower) + min_lower - 1;
-					// Choose a random range
-					String[] ranges = {"<", ">", "<=", ">=", "><=", ">=<=", "><", ">=<"};
-			        //String range = (String) params.get(rangeName);
-			        String range = ranges[random.nextInt(8)];
-					rs = new RangeScan(col, low, high, range);
-					queries.add(rs);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
-				
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -219,19 +209,22 @@ public class Tester {
 				e.printStackTrace();
 			}		
 		}
+		rangescans.get(0).getColumn().getCrackerColumn().reset();
 		return times;
 	}
 	
 	public static void populateDB(Database db){
-		String colname = "testCol";
-		// simple column results versus sorted column results.
-		db.createSimpleColumnCracking(colname);
-		try {
-			db.populateColumn(colname, 0, 1000, 1000000);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail("No such column exists in the DB!");
+		// simple column results versus sorted column result
+		for (int i=0; i<3; i++) {
+			String colname = "testCol" + i;
+			db.createSimpleColumnCracking(colname, i);
+			try {
+				db.populateColumn(colname, 0, 100000, 1000000);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				fail("No such column exists in the DB!");
+			}
 		}
 	}
 	
@@ -269,19 +262,18 @@ public class Tester {
 		return null;
 	}
 	
-	public static void writeResults(ArrayList<ArrayList<Long>> times, String destination) throws FileNotFoundException, UnsupportedEncodingException{
+	public static void writeResults(ArrayList<Long> times, String destination) throws FileNotFoundException, UnsupportedEncodingException{
 		//PrintWriter writer = new PrintWriter(new File(destination), "UTF-8");
 		PrintWriter writer;
 		try {
 			writer = new PrintWriter(new FileWriter(destination));
-			for(ArrayList<Long> val: times){
+			for(Long val: times){
 				writer.println(val);
 			}
 			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
+		}		
 	}
 }

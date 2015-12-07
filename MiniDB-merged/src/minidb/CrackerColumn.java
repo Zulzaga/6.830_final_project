@@ -32,12 +32,16 @@ public class CrackerColumn{
 	public CrackerIndex crackerIndex;
 	private int minPartitionSize = 10000;
 	
-	public CrackerColumn(ArrayList<Integer> originalValues){
+	public CrackerColumn(ArrayList<Integer> originalValues, int index){
 		this.originalValues = originalValues;
 		this.values = this.copyValues(originalValues);
-		//this.crackerIndex = new CrackerIndexAVL(originalValues.size());
-		this.crackerIndex = new CrackerIndexHashMap(originalValues.size());
-	    //this.crackerIndex = new CrackerIndexSortedList(originalValues.size());
+		if (index == 0) {
+			this.crackerIndex = new CrackerIndexAVL(originalValues.size());
+		} else if (index == 1) {
+			this.crackerIndex = new CrackerIndexHashMap(originalValues.size());
+		} else {
+			this.crackerIndex = new CrackerIndexSortedList(originalValues.size());
+		}
 	}
 	
 	/**

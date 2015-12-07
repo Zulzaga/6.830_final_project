@@ -17,10 +17,12 @@ public class SimpleColumn implements Column {
 	
 	private boolean isCracked = false;
 	private CrackerColumn crackerColumn = null;
+	public int index;
 
-	public SimpleColumn(String name, boolean useCracking){
+	public SimpleColumn(String name, boolean useCracking, int index){
 		this.name = name;
 		this.useCracking = useCracking;
+		this.index = index;
 	}
 	
 	public String getName() {
@@ -112,7 +114,7 @@ public class SimpleColumn implements Column {
 	 * Create a new instance of cracker column
 	 */
 	public void initializeCrackerColumn() {
-		this.crackerColumn = new CrackerColumn(this.values);	
+		this.crackerColumn = new CrackerColumn(this.values, index);	
 	}
 
 	public void removeCrackerColumn() {
