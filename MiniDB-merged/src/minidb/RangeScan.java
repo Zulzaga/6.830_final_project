@@ -218,4 +218,8 @@ public class RangeScan {
             return null;// out of tuples
         }
     }
+    
+    public Column getColumn() {
+    	return this.column;
+    }
 }

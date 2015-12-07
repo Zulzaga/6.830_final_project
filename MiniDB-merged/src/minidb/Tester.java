@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
 
-import static java.lang.Math.toIntExact;
 import static org.junit.Assert.fail;
 
 import org.json.simple.*;
@@ -66,8 +65,8 @@ public class Tester {
 		populateDB(db);
 		
 		//Test variables, comment out for real command line testing
-		String filename = "/Users/zulsarbatmunkh/Desktop/final_project/code/MiniDB/src/minidb/testWorkload.json";
-		String destFilename = "/Users/zulsarbatmunkh/Desktop/final_project/code/MiniDB/src/minidb/Results.txt";
+		String filename = "/afs/athena.mit.edu/user/z/u/zulsar/MiniDB-merged/MiniDB-merged/src/minidb/testWorkload.json";
+		String destFilename = "/afs/athena.mit.edu/user/z/u/zulsar/MiniDB-merged/MiniDB-merged/src/minidb/Results.txt";
 		
 		//Parse file and get parameters
 		JSONObject params = parseFile(filename);
@@ -76,12 +75,15 @@ public class Tester {
 		ArrayList<ArrayList<Long>> times = new ArrayList<ArrayList<Long>>();
 		
 		//Run queries, record their times
-		for (int i=0; i < 10; i++) {
+		for (int i=0; i < 1; i++) {
 		    ArrayList<RangeScan> rscans = generateWorkload(params);
 		    times.add(testWorkload(rscans));
-		    System.out.println(times);
+		    System.out.println("running queries " + i);
+		    //System.out.println(((CrackerIndexHashMap)rscans.get(0).getColumn().getCrackerColumn().crackerIndex).values);
+		    rscans.get(0).getColumn().getCrackerColumn().reset();
+		    //System.out.println(((CrackerIndexHashMap)rscans.get(0).getColumn().getCrackerColumn().crackerIndex).values);
 		}
-		
+		System.out.println(times);
 		//Record results in the file
 		try {
 			writeResults(times, destFilename);
@@ -222,10 +224,10 @@ public class Tester {
 	
 	public static void populateDB(Database db){
 		String colname = "testCol";
-
+		// simple column results versus sorted column results.
 		db.createSimpleColumnCracking(colname);
 		try {
-			db.populateColumn(colname, 0, 1000, 100000);
+			db.populateColumn(colname, 0, 1000, 1000000);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

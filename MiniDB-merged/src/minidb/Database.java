@@ -117,7 +117,7 @@ public class Database {
 	 * Delete specified column from the DataBase
 	 * @param colname
 	 */
-	public void removeColumn(String colname){
+	public static void removeColumn(String colname){
 		Database.getCatalog().remove(colname);
 	}
 

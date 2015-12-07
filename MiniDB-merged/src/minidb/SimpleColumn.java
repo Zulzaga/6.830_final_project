@@ -122,4 +122,9 @@ public class SimpleColumn implements Column {
 	public boolean useCracking(){
 		return this.useCracking;
 	}
+
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
 }

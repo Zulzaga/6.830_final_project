@@ -109,4 +109,9 @@ public interface Column {
 	 * @throws Exception 
 	 */
 	void swap(int index1, int index2) throws Exception;
+	
+	/**
+	 * Resets the column values and index back to original, forgets all prior knowledge.
+	 */
+	void reset();
 }

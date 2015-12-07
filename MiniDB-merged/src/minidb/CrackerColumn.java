@@ -28,10 +28,12 @@ public class CrackerColumn{
 	}
 	
 	public ArrayList<Integer> values;
+	public ArrayList<Integer> originalValues;
 	public CrackerIndex crackerIndex;
-	private int minPartitionSize = 10000; 
+	private int minPartitionSize = 10000;
 	
 	public CrackerColumn(ArrayList<Integer> originalValues){
+		this.originalValues = originalValues;
 		this.values = this.copyValues(originalValues);
 		//this.crackerIndex = new CrackerIndexAVL(originalValues.size());
 		this.crackerIndex = new CrackerIndexHashMap(originalValues.size());
@@ -99,6 +101,7 @@ public class CrackerColumn{
 			int posL = this.crackerIndex.findNextSmallerIndex(value); //must be valid > 0
 			int posH = this.crackerIndex.findNextGreaterIndex(value); //must be valid <size of values array
 			// DECIDE IF PARTITION FURTHER, MIN partition size
+			System.out.println("Cracking between positions: " + posL + " " + posH);
 			int posPivot  = this.crackInTwo(posL, posH, value, true);
 
             this.crackerIndex.setPositionForExistingValue(value, posPivot); //change the position since we know it
@@ -455,5 +458,10 @@ public class CrackerColumn{
 			return 0;
 		}
 		return pivotIndexHigh-1;
+	}
+	
+	public void reset() {
+		this.values = this.copyValues(originalValues);
+		this.crackerIndex = new CrackerIndexHashMap(originalValues.size());
 	}
 }

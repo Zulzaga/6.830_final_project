@@ -209,4 +209,9 @@ public class SortedColumn implements Column{
 	public void removeCrackerColumn() {
 	}
 
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
