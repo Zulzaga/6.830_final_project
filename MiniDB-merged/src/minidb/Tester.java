@@ -87,7 +87,6 @@ public class Tester {
 		    generateWorkload(workloads);
 		    for (String key : workloads.keySet()) {
 		    	System.out.println("testing " + key);
-		    	System.out.println(workloads.get(key).size());
 		    	ArrayList<TestResult> rs_times = testWorkload(workloads.get(key));
 		    	System.out.println("time " + getTimes(rs_times));
 		    	try {
@@ -157,7 +156,7 @@ public class Tester {
 	    ranges.add(mixed_ranges);
 		Column col;
 		//String[] names = {"AVL", "HashMap", "Sorted"};
-		String[] names = {"Simple"};
+		String[] names = {"SortedNormal"};
 		String[] range_names = {"single", "double", "mixed"};
 		try {
 			// Looping through each different cracker index type
@@ -231,6 +230,7 @@ public class Tester {
 			}		
 		}
 		//rangescans.get(0).getColumn().getCrackerColumn().reset();
+		rangescans.get(0).getColumn().reset();
 		return results;
 	}
 	
@@ -239,7 +239,8 @@ public class Tester {
 		for (int i=0; i<1; i++) {
 			String colname = "testCol" + i;
 			//db.createSimpleColumnCracking(colname, i);
-			db.createSimpleColumnNonCracking(colname, i);
+			//db.createSimpleColumnNonCracking(colname, i);
+			db.createSortedColumn(colname, i);
 			try {
 				db.populateColumn(colname, 0, 100000, 1000000);
 			} catch (Exception e) {

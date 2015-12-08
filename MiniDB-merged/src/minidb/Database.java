@@ -83,6 +83,14 @@ public class Database {
 		Database.getCatalog().put(colname, col);
 	}
 	
+	/**
+	 * Create and add to the catalog a new Column instance
+	 */
+	public void createSortedColumn(String colname, int index){
+		SortedColumn col = new SortedColumn(colname);
+		Database.getCatalog().put(colname, col);
+	}
+	
 	
 	/**
 	 * Parses a file with an integer on each line, adds all

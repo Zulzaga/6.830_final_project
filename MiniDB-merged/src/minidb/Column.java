@@ -114,4 +114,6 @@ public interface Column {
 	 * Resets the column values and index back to original, forgets all prior knowledge.
 	 */
 	void reset();
+	
+	boolean isSorted();
 }

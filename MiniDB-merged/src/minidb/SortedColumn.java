@@ -9,6 +9,7 @@ public class SortedColumn implements Column{
 	
 	public String name;
 	public ArrayList<Integer> values = new ArrayList<Integer>();
+	public boolean sorted = false;
 	
 	public SortedColumn(String name){
 		this.name = name;
@@ -214,4 +215,17 @@ public class SortedColumn implements Column{
 		
 	}
 
+	public boolean isSorted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public int getIndex(int low) {
+		return low;
+		
+	}
+	
+	public ArrayList<Integer> values(int low, int high) {
+		return values;
+	}
 }

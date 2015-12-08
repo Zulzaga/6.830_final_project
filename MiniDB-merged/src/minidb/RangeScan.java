@@ -157,7 +157,40 @@ public class RangeScan {
                 // TODO double ranges
             }
         } else {
-            this.childIterator = column.getIterator();
+        	if (!column.isSorted()) {
+        		this.childIterator = column.getIterator();
+        	} else {
+        		SortedColumn orig = (SortedColumn) column;
+        		if (!orig.sorted) {
+        			//System.out.println("start sort");
+        			orig.sort(true);
+        			orig.sorted = true;
+        			//System.out.println("finish sort");
+        		}
+        		
+        		int sort_low = orig.getIndex(this.low);
+        		int sort_high = orig.getIndex(this.high);
+        		//System.out.println(low);
+        		//System.out.println(high);
+        		
+        		ArrayList<Integer> results;
+        		if (range.equals("<") || range.equals("<=")) {
+        			results = orig.values(0, sort_low);
+        			//System.out.println(" final " + results.get(results.size() - 1));
+            		this.childIterator = results.iterator();
+        		} else if (range.equals(">") || range.equals(">=")) {
+        			results = orig.values(sort_low, orig.values.size() - 1);
+        			//System.out.println(" start " + results.get(1));
+        			//System.out.println(" final " + results.get(results.size() - 1));
+                	
+            		this.childIterator = results.iterator();
+        		} else {
+        			results = orig.values(sort_low, sort_high);
+        			//System.out.println(" start " + results.get(0));
+        			//System.out.println(" final " + results.get(results.size() - 1));
+            		this.childIterator = results.iterator();
+        		}
+        	}
         }
     }
 
@@ -216,13 +249,23 @@ public class RangeScan {
                 return null;
             }
         } else { // no cracking, scan every tuple and check if within the range
-            while (this.childIterator.hasNext()) {
-                Integer tuple = this.childIterator.next();
-                if (this.filter(tuple)) {
+        	if (!this.column.isSorted()) {
+	            while (this.childIterator.hasNext()) {
+	                Integer tuple = this.childIterator.next();
+	                if (this.filter(tuple)) {
+	                    return tuple;
+	                }
+	            }
+	            return null;// out of tuples
+        	} else {
+        		Integer tuple;
+                if (this.childIterator.hasNext()) {
+                    tuple = this.childIterator.next();
                     return tuple;
+                } else {
+                    return null;
                 }
-            }
-            return null;// out of tuples
+        	}
         }
     }
     
