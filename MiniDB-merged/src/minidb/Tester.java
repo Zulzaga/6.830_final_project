@@ -83,7 +83,7 @@ public class Tester {
 		HashMap<String, ArrayList<RangeScan>> workloads = new HashMap<String, ArrayList<RangeScan>>();
 		
 		//Run queries, record their times
-		for (int i=0; i < 5; i++) {
+		for (int i=0; i < 1; i++) {
 		    generateWorkload(workloads);
 		    for (String key : workloads.keySet()) {
 		    	System.out.println("testing " + key);
@@ -144,7 +144,7 @@ public class Tester {
 	public static ArrayList<ArrayList<RangeScan>> generateWorkload(HashMap<String, ArrayList<RangeScan>> workloads){
 		
 		ArrayList<ArrayList<RangeScan>> queries = new ArrayList<ArrayList<RangeScan>>();
-		Integer[] workload_ranges = {1000};
+		Integer[] workload_ranges = {5000};
 		Integer min_lower = 1;
 		Integer max_upper = 100000;
 		Random random = new Random();
