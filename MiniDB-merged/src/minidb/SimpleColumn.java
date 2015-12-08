@@ -126,7 +126,6 @@ public class SimpleColumn implements Column {
 	}
 
 	public void reset() {
-		// TODO Auto-generated method stub
 		
 	}
 }

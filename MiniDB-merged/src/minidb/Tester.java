@@ -144,23 +144,24 @@ public class Tester {
 	public static ArrayList<ArrayList<RangeScan>> generateWorkload(HashMap<String, ArrayList<RangeScan>> workloads){
 		
 		ArrayList<ArrayList<RangeScan>> queries = new ArrayList<ArrayList<RangeScan>>();
-		Integer[] workload_ranges = {5000};
+		Integer[] workload_ranges = {1000, 5000};
 		Integer min_lower = 1;
 		Integer max_upper = 100000;
 		Random random = new Random();
 		String[] single_ranges = {"<", ">", "<=", ">="};
-		String[] double_ranges = {"><="};
+		String[] double_ranges = {"><=", ">=<=", "><", ">=<"};
 		String[] mixed_ranges = {"<", ">", "<=", ">=", "><=", ">=<=", "><", ">=<"};
 	    ArrayList<String[]> ranges = new ArrayList<String[]>();
 	    ranges.add(single_ranges);
 	    ranges.add(double_ranges);
 	    ranges.add(mixed_ranges);
 		Column col;
-		String[] names = {"AVL", "HashMap", "Sorted"};
+		//String[] names = {"AVL", "HashMap", "Sorted"};
+		String[] names = {"Simple"};
 		String[] range_names = {"single", "double", "mixed"};
 		try {
 			// Looping through each different cracker index type
-			for (int i=0; i<3; i++) {
+			for (int i=0; i<1; i++) {
 				col = Database.getColumn("testCol" + i);
 				RangeScan rs;
 				String type_name = names[i];
@@ -229,15 +230,16 @@ public class Tester {
 				e.printStackTrace();
 			}		
 		}
-		rangescans.get(0).getColumn().getCrackerColumn().reset();
+		//rangescans.get(0).getColumn().getCrackerColumn().reset();
 		return results;
 	}
 	
 	public static void populateDB(Database db){
 		// simple column results versus sorted column result
-		for (int i=0; i<3; i++) {
+		for (int i=0; i<1; i++) {
 			String colname = "testCol" + i;
-			db.createSimpleColumnCracking(colname, i);
+			//db.createSimpleColumnCracking(colname, i);
+			db.createSimpleColumnNonCracking(colname, i);
 			try {
 				db.populateColumn(colname, 0, 100000, 1000000);
 			} catch (Exception e) {

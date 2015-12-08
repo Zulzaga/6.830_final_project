@@ -59,4 +59,9 @@ public class CrackerIndexHashMap implements CrackerIndex {
     public void removeValue(Integer k) {
         values.remove(k);    
     }
+
+	public int getValues() {
+		// TODO Auto-generated method stub
+		return values.size();
+	}
 }

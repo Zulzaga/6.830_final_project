@@ -75,6 +75,14 @@ public class Database {
 		Database.getCatalog().put(colname, col);
 	}
 	
+	/**
+	 * Create and add to the catalog a new Column instance
+	 */
+	public void createSimpleColumnNonCracking(String colname, int index){
+		SimpleColumn col = new SimpleColumn(colname, false, index);
+		Database.getCatalog().put(colname, col);
+	}
+	
 	
 	/**
 	 * Parses a file with an integer on each line, adds all

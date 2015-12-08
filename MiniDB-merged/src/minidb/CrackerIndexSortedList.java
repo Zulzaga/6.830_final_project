@@ -97,4 +97,9 @@ public class CrackerIndexSortedList implements CrackerIndex {
             }
         }
     }
+
+	public int getValues() {
+		// TODO Auto-generated method stub
+		return values.size();
+	}
 }

@@ -66,4 +66,5 @@ public interface CrackerIndex {
 	 */
 	void setPositionForExistingValue(Integer k, int index) throws Exception;
 	
+	int getValues();
 }

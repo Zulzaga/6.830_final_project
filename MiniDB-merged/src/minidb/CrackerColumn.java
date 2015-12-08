@@ -104,7 +104,7 @@ public class CrackerColumn{
 			int posL = this.crackerIndex.findNextSmallerIndex(value); //must be valid > 0
 			int posH = this.crackerIndex.findNextGreaterIndex(value); //must be valid <size of values array
 			// DECIDE IF PARTITION FURTHER, MIN partition size
-			//System.out.println("Cracking between positions: " + posL + " " + posH);
+			//System.out.println("Cracking between positions: " + crackerIndex.getValues());
 			int posPivot  = this.crackInTwo(posL, posH, value, true);
 		
             this.crackerIndex.setPositionForExistingValue(value, posPivot); //change the position since we know it

@@ -4,9 +4,11 @@ public class CrackerIndexAVL implements CrackerIndex {
 	
 	public AVLTree avltree = new AVLTree();
 	public int numValues;
+	public int size;
 	
 	public CrackerIndexAVL(int numValues){
 		this.numValues = numValues;
+		size = 0;
 	}
 	
 
@@ -22,6 +24,7 @@ public class CrackerIndexAVL implements CrackerIndex {
 
 	public void addValue(Integer k, int index) {
 		avltree.insert(k, index);
+		size++;
 
 	}
 
@@ -72,4 +75,7 @@ public class CrackerIndexAVL implements CrackerIndex {
         
     }
 
+    public int getValues() {
+		return size;
+    }
 }
