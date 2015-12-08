@@ -1,5 +1,6 @@
 package minidb;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Set;
@@ -126,6 +127,24 @@ public class Database {
 			}
 		}
 		
+	}
+	
+	public void populateUniqueColumn(String colname, int min_value, int max_value, int num_entries) throws Exception{
+		Column col = Database.getCatalog().get(colname);
+		if(col == null){
+			throw new Exception("DB doesn't have column with name "+colname);
+		}
+		Random r = new Random();
+		int count = 0;
+		HashMap<Integer, Integer> entries = new HashMap<Integer, Integer>();
+		while(count < num_entries){
+			Integer val = r.nextInt(max_value - min_value) + min_value;
+			if (!entries.containsKey(val)){
+				entries.put(val, val);
+				col.insertTuple(val);
+				count++;	
+			}
+		}
 	}
 	
 	/**

@@ -126,7 +126,9 @@ public class SimpleColumn implements Column {
 	}
 
 	public void reset() {
-		
+		if (crackerColumn != null) {
+			crackerColumn.reset();
+		}
 	}
 
 	public boolean isSorted() {

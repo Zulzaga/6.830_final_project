@@ -162,10 +162,8 @@ public class RangeScan {
         	} else {
         		SortedColumn orig = (SortedColumn) column;
         		if (!orig.sorted) {
-        			//System.out.println("start sort");
         			orig.sort(true);
         			orig.sorted = true;
-        			//System.out.println("finish sort");
         		}
         		
         		int sort_low = orig.getIndex(this.low);

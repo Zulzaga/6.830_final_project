@@ -9,6 +9,7 @@ public class SortedColumn implements Column{
 	
 	public String name;
 	public ArrayList<Integer> values = new ArrayList<Integer>();
+	public ArrayList<Integer> originalValues = new ArrayList<Integer>();
 	public boolean sorted = false;
 	
 	public SortedColumn(String name){
@@ -37,6 +38,7 @@ public class SortedColumn implements Column{
 	 */
 	public void insertTuple(Integer value, int index) {
 		this.values.add(index, value);
+		this.originalValues.add(index, value);
 		
 	}
 	/*
@@ -46,6 +48,7 @@ public class SortedColumn implements Column{
 	 */
 	public void insertTuple(Integer value) {
 		this.values.add(value);
+		originalValues.add(value);
 		
 	}
 	
@@ -211,21 +214,51 @@ public class SortedColumn implements Column{
 	}
 
 	public void reset() {
-		// TODO Auto-generated method stub
-		
+		this.sorted = false;
+		this.values = new ArrayList<Integer>();
+		for (int i: originalValues) {
+			values.add(i);
+		}
 	}
 
 	public boolean isSorted() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
-	public int getIndex(int low) {
-		return low;
-		
+	public int getIndex(int value) {
+		return rBSearch(0, values.size() - 1, value);
+	}
+	
+	public int rBSearch(int low, int high, int value) {
+		int mid = (low + high)/2;
+		if (low > high) {
+			return -1;
+		} else if (values.get(mid) == value) {
+			return mid;
+		} else if (values.get(mid) < value) {
+			if (mid == values.size() - 1) {
+				return mid;
+			} else if (values.get(mid+1) >= value) {
+				return mid+1;
+			} else {
+				return rBSearch(mid+1, high, value);
+			}
+		} else {
+			if (mid == 0) {
+				return mid;
+			} else if (values.get(mid-1) < value) {
+				return mid;
+			} else {
+				return rBSearch(low, mid-1, value);
+			}			
+		}
 	}
 	
 	public ArrayList<Integer> values(int low, int high) {
-		return values;
+		ArrayList<Integer> results = new ArrayList<Integer>();
+		for (int i=low; i<high; i++) {
+			results.add(values.get(i));
+		}
+		return results;
 	}
 }

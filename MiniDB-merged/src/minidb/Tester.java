@@ -1,4 +1,5 @@
 package minidb;
+import java.awt.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,10 +10,8 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Random;
@@ -56,6 +55,20 @@ public class Tester {
 			this.high = high;
 		}
 	}
+	
+	public static class RangeScanParams {
+		public int low;
+		public int high;
+		public String range;
+		public String name;
+		
+		public RangeScanParams(int low, int high, String range, String name) {
+			this.low = low;
+			this.high = high;
+			this.range = range;
+			this.name = name;
+		}
+	}
 	public static void main(String[] args) throws InterruptedException {
 		
 		//Comment in for real command line testing
@@ -77,7 +90,7 @@ public class Tester {
 		populateDB(db);
 		
 		//Test variables, comment out for real command line testing
-		String destFilename = "/afs/athena.mit.edu/user/z/u/zulsar/MiniDB-merged/MiniDB-merged/src/minidb/";
+		String destFilename = "/afs/athena.mit.edu/user/z/u/zulsar/minidb_results/same_scans/";
 	
 		//Generate queries
 		HashMap<String, ArrayList<RangeScan>> workloads = new HashMap<String, ArrayList<RangeScan>>();
@@ -143,9 +156,9 @@ public class Tester {
 	public static ArrayList<ArrayList<RangeScan>> generateWorkload(HashMap<String, ArrayList<RangeScan>> workloads){
 		
 		ArrayList<ArrayList<RangeScan>> queries = new ArrayList<ArrayList<RangeScan>>();
-		Integer[] workload_ranges = {1000, 5000};
+		Integer[] workload_ranges = {100000};
 		Integer min_lower = 1;
-		Integer max_upper = 100000;
+		Integer max_upper = 1000000;
 		Random random = new Random();
 		String[] single_ranges = {"<", ">", "<=", ">="};
 		String[] double_ranges = {"><=", ">=<=", "><", ">=<"};
@@ -154,40 +167,52 @@ public class Tester {
 	    ranges.add(single_ranges);
 	    ranges.add(double_ranges);
 	    ranges.add(mixed_ranges);
+	    
+	    ArrayList<RangeScanParams> prep_ranges = new ArrayList<RangeScanParams>();
+	    String[] range_names = {"single", "double", "mixed"};
+	    for (int range_i = 0; range_i < range_names.length; range_i++) {
+			String range_name = range_names[range_i];
+			String range = null;
+			String[] given_range = ranges.get(range_i);
+	    	range = given_range[random.nextInt(given_range.length)];
+		    for (int i=0; i<50000; i++) {
+				int low = min_lower-1;
+				int high = max_upper; 
+				
+				while(low < min_lower){
+					high = random.nextInt(max_upper-1) + 1;
+					low = random.nextInt(high);
+				}
+				RangeScanParams params = new RangeScanParams(low, high, range, range_name);
+				prep_ranges.add(params);
+		    }
+	    }
+	    
 		Column col;
-		//String[] names = {"AVL", "HashMap", "Sorted"};
-		String[] names = {"SortedNormal"};
-		String[] range_names = {"single", "double", "mixed"};
+		String[] names = {"AVL", "HashMap", "Sorted", "Simple", "SortedNonCracking"};
+		//String[] names = {"SortedNormal"};
+		//String[] range_names = {"single", "double", "mixed"};
 		try {
 			// Looping through each different cracker index type
-			for (int i=0; i<1; i++) {
+			for (int i=0; i<names.length; i++) {
 				col = Database.getColumn("testCol" + i);
 				RangeScan rs;
 				String type_name = names[i];
 				for(int index = 0; index < workload_ranges.length; index++){
+					ArrayList<RangeScan> rangeScans = new ArrayList<RangeScan>();
 					try {
 						String workload_name = workload_ranges[index].toString();
-						String range = null;
-						for (int range_i = 0; range_i < 3; range_i++) {
-							ArrayList<RangeScan> rangeScans = new ArrayList<RangeScan>();
-							String range_name = range_names[range_i];
-							String name = type_name + workload_name + range_name;
-							String[] given_range = ranges.get(range_i);
-					    	range = given_range[random.nextInt(given_range.length)];
+						String name = null;
+						for (int range_i = 0; range_i < range_names.length; range_i++) {
+							Object[] params = (prep_ranges.subList(50000*range_i, 50000*(range_i+1)).toArray());
 					    	for (int work_ind=0; work_ind < workload_ranges[index]; work_ind++) {
-								int low = min_lower-1;
-								int high = max_upper; 
-								
-								while(low < min_lower){
-									high = random.nextInt(max_upper-1) + 1;
-									low = random.nextInt(high);
-								}
-
-					    		rs = new RangeScan(col, low, high, range);
+					    		RangeScanParams param = (RangeScanParams)params[work_ind];
+					    		name = type_name + workload_name + param.name;
+					    		rs = new RangeScan(col, param.low, param.high, param.range);
 					    		rangeScans.add(rs);
 					    	}
 					    	workloads.put(name, rangeScans);
-					    }
+						}
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -236,13 +261,18 @@ public class Tester {
 	
 	public static void populateDB(Database db){
 		// simple column results versus sorted column result
-		for (int i=0; i<1; i++) {
+		for (int i=0; i<5; i++) {
 			String colname = "testCol" + i;
-			//db.createSimpleColumnCracking(colname, i);
-			//db.createSimpleColumnNonCracking(colname, i);
-			db.createSortedColumn(colname, i);
+			if (i < 3) {
+				db.createSimpleColumnCracking(colname, i);
+			} else if (i == 3) {
+				db.createSimpleColumnNonCracking(colname, i);
+			} else {
+			    db.createSortedColumn(colname, i);
+			}
 			try {
-				db.populateColumn(colname, 0, 100000, 1000000);
+				db.populateUniqueColumn(colname, 0, 1000000, 1000000);
+				//db.populateColumn(colname, 0, 100000, 1000000);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -289,7 +319,7 @@ public class Tester {
 		//PrintWriter writer = new PrintWriter(new File(destination), "UTF-8");
 		PrintWriter writer;
 		try {
-			writer = new PrintWriter(new FileWriter(destination + System.currentTimeMillis()));
+			writer = new PrintWriter(new FileWriter(destination));
 			for(TestResult val: times){
 				writer.println(val.time + " " + val.low + " " + val.high);
 			}
