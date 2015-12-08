@@ -45,6 +45,17 @@ import org.json.simple.parser.JSONParser;
  *
  */
 public class Tester {
+	public static class TestResult {
+		public Long time;
+		public int low;
+		public int high;
+		
+		public TestResult(Long time, int low, int high) {
+			this.time = time;
+			this.low = low;
+			this.high = high;
+		}
+	}
 	public static void main(String[] args) throws InterruptedException {
 		
 		//Comment in for real command line testing
@@ -72,15 +83,13 @@ public class Tester {
 		HashMap<String, ArrayList<RangeScan>> workloads = new HashMap<String, ArrayList<RangeScan>>();
 		
 		//Run queries, record their times
-		for (int i=0; i < 1; i++) {
+		for (int i=0; i < 5; i++) {
 		    generateWorkload(workloads);
-		    for (String key_sort : workloads.keySet()) {
-		    	String key = "AVL10000mixed";
+		    for (String key : workloads.keySet()) {
 		    	System.out.println("testing " + key);
 		    	System.out.println(workloads.get(key).size());
-		    	ArrayList<Long> rs_times = testWorkload(workloads.get(key));
-		    	System.out.println("time " + rs_times);
-		    	System.exit(0);
+		    	ArrayList<TestResult> rs_times = testWorkload(workloads.get(key));
+		    	System.out.println("time " + getTimes(rs_times));
 		    	try {
 					writeResults(rs_times, destFilename + key + ".txt");
 				} catch (FileNotFoundException e) {
@@ -94,6 +103,15 @@ public class Tester {
 		    System.out.println("running times: " + i);
 		}
 		//Record results in the file
+	}
+	
+	public static ArrayList<Long> getTimes(ArrayList<TestResult> results) {
+		ArrayList<Long> times = new ArrayList<Long>();
+		for (TestResult result : results) {
+			times.add(result.time);
+		}
+		
+		return times;
 	}
 	
 	/**
@@ -126,12 +144,12 @@ public class Tester {
 	public static ArrayList<ArrayList<RangeScan>> generateWorkload(HashMap<String, ArrayList<RangeScan>> workloads){
 		
 		ArrayList<ArrayList<RangeScan>> queries = new ArrayList<ArrayList<RangeScan>>();
-		Integer[] workload_ranges = {10000};
+		Integer[] workload_ranges = {1000};
 		Integer min_lower = 1;
 		Integer max_upper = 100000;
 		Random random = new Random();
 		String[] single_ranges = {"<", ">", "<=", ">="};
-		String[] double_ranges = {"><=", ">=<=", "><", ">=<"};
+		String[] double_ranges = {"><="};
 		String[] mixed_ranges = {"<", ">", "<=", ">=", "><=", ">=<=", "><", ">=<"};
 	    ArrayList<String[]> ranges = new ArrayList<String[]>();
 	    ranges.add(single_ranges);
@@ -156,7 +174,6 @@ public class Tester {
 							String name = type_name + workload_name + range_name;
 							String[] given_range = ranges.get(range_i);
 					    	range = given_range[random.nextInt(given_range.length)];
-					    	System.out.println("generating rs for " + name + " range " + range);
 					    	for (int work_ind=0; work_ind < workload_ranges[index]; work_ind++) {
 								int low = min_lower-1;
 								int high = max_upper; 
@@ -190,9 +207,9 @@ public class Tester {
 	 * @param queries Query objects (workload)
 	 * @return list of longs (time in ms, unix time)
 	 */
-	private static ArrayList<Long> testWorkload(ArrayList<RangeScan> rangescans){
+	private static ArrayList<TestResult> testWorkload(ArrayList<RangeScan> rangescans){
 		//TODO
-		ArrayList<Long> times = new ArrayList<Long>();
+		ArrayList<TestResult> results = new ArrayList<TestResult>();
 		long start;
 		for(RangeScan rs : rangescans){
 			start = System.currentTimeMillis();
@@ -204,14 +221,16 @@ public class Tester {
 					tuple = rs.fetchNext();
 				}
 				rs.close();
-				times.add(System.currentTimeMillis() - start);
+				Long time = System.currentTimeMillis() - start;
+				TestResult result = new TestResult(time, rs.low, rs.high);
+				results.add(result);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}		
 		}
 		rangescans.get(0).getColumn().getCrackerColumn().reset();
-		return times;
+		return results;
 	}
 	
 	public static void populateDB(Database db){
@@ -263,13 +282,13 @@ public class Tester {
 		return null;
 	}
 	
-	public static void writeResults(ArrayList<Long> times, String destination) throws FileNotFoundException, UnsupportedEncodingException{
+	public static void writeResults(ArrayList<TestResult> times, String destination) throws FileNotFoundException, UnsupportedEncodingException{
 		//PrintWriter writer = new PrintWriter(new File(destination), "UTF-8");
 		PrintWriter writer;
 		try {
-			writer = new PrintWriter(new FileWriter(destination));
-			for(Long val: times){
-				writer.println(val);
+			writer = new PrintWriter(new FileWriter(destination + System.currentTimeMillis()));
+			for(TestResult val: times){
+				writer.println(val.time + " " + val.low + " " + val.high);
 			}
 			writer.close();
 		} catch (IOException e) {

@@ -97,7 +97,6 @@ public class AVLTree {
    recursiveBalance(cur.parent);
   } else {
    this.root = cur;
-   System.out.println("------------ Balancing finished ----------------");
   }
  }
 

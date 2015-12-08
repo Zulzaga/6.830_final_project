@@ -17,9 +17,9 @@ public class RangeScan {
     private Column column;
     private Iterator<Integer> childIterator;
 
-    private Integer low; // Cannot be null, if openRange, must be the only non
+    public Integer low; // Cannot be null, if openRange, must be the only non
                          // null end
-    private Integer high; // Can be null
+    public Integer high; // Can be null
     private String range; // One of <, <=, >, >=, <<, <=<, <<=, <=<=
     private boolean openRange; // True if range is <, >, <= or >=
 
@@ -137,10 +137,17 @@ public class RangeScan {
             } else {
                 try {
                     int index = this.range.indexOf("<");
-                    ArrayList<Integer> results_low = cc.crack(this.low, this.range.substring(0, index + 1));
-                    ArrayList<Integer> results_high = cc.crack(this.high, this.range.substring(index + 1));
-                    results_low.retainAll(results_high);
-                    this.childIterator = results_low.iterator();
+                    ArrayList<Integer> results_low = cc.crack(this.low, this.range.substring(0, index));
+                    ArrayList<Integer> results_high = cc.crack(this.high, this.range.substring(index));
+                    ArrayList<Integer> results = new ArrayList<Integer>();
+                    for (int result : results_low) {
+                    	if (result !=results_high.get(results_high.size()-1)) {
+                    		results.add(result);
+                    	} else {
+                    		break;
+                    	}
+                    }
+                    this.childIterator = results.iterator();
                     this.open = true;
                 } catch (Exception e) {
                     // TODO Auto-generated catch block

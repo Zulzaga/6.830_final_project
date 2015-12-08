@@ -86,7 +86,6 @@ public class CrackerColumn{
 		else {//range == < or range == >=
 			value = value-1; // to be able to use Index (look into CrackerIndex invariant)
 		}
-		
 		//lookup in the index
 		int index = this.crackerIndex.findIndexValue(value);
 		//found it
@@ -105,10 +104,11 @@ public class CrackerColumn{
 			int posL = this.crackerIndex.findNextSmallerIndex(value); //must be valid > 0
 			int posH = this.crackerIndex.findNextGreaterIndex(value); //must be valid <size of values array
 			// DECIDE IF PARTITION FURTHER, MIN partition size
-			System.out.println("Cracking between positions: " + posL + " " + posH);
+			//System.out.println("Cracking between positions: " + posL + " " + posH);
 			int posPivot  = this.crackInTwo(posL, posH, value, true);
-
+		
             this.crackerIndex.setPositionForExistingValue(value, posPivot); //change the position since we know it
+            
             if (range.equals("<=") || range.equals("<")){ //everything to the left, incl
                 
                 return new ArrayList(this.values.subList(0, posPivot+1)); //first arg included, second not according to java specs
