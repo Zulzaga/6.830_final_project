@@ -1,0 +1,18 @@
+\begin{thebibliography}{1}
+
+\bibitem{idreos_2007}
+S.~Idreos, M.~L. Kersten, and S.~Manegold.
+\newblock Database cracking.
+\newblock In {\em CIDR}, pages 68--78, 2007.
+
+\bibitem{kersten_2005}
+M.~Kersten and S.~Manegold.
+\newblock Cracking the database store.
+\newblock In {\em CIDR}, 2005.
+
+\bibitem{schuhknecht_2014}
+F.~M. Schuhknecht, A.~Jindal, and J.~Dittrich.
+\newblock The {Uncracked} {Pieces} in {Database} {Cracking} {Management}.
+\newblock {\em Proc. VLDB Endow.}, 7(2):97--108, Oct. 2013.
+
+\end{thebibliography}
