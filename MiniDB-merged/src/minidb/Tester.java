@@ -164,18 +164,19 @@ public class Tester {
 		String[] double_ranges = {"><=", ">=<=", "><", ">=<"};
 		String[] mixed_ranges = {"<", ">", "<=", ">=", "><=", ">=<=", "><", ">=<"};
 	    ArrayList<String[]> ranges = new ArrayList<String[]>();
-	    ranges.add(single_ranges);
+	    //ranges.add(single_ranges);
 	    ranges.add(double_ranges);
-	    ranges.add(mixed_ranges);
+	    //ranges.add(mixed_ranges);
+	    int max_workload = 100000;
 	    
 	    ArrayList<RangeScanParams> prep_ranges = new ArrayList<RangeScanParams>();
-	    String[] range_names = {"single", "double", "mixed"};
+	    String[] range_names = {"double"};
 	    for (int range_i = 0; range_i < range_names.length; range_i++) {
 			String range_name = range_names[range_i];
 			String range = null;
 			String[] given_range = ranges.get(range_i);
 	    	range = given_range[random.nextInt(given_range.length)];
-		    for (int i=0; i<50000; i++) {
+		    for (int i=0; i<max_workload; i++) {
 				int low = min_lower-1;
 				int high = max_upper; 
 				
@@ -199,12 +200,12 @@ public class Tester {
 				RangeScan rs;
 				String type_name = names[i];
 				for(int index = 0; index < workload_ranges.length; index++){
-					ArrayList<RangeScan> rangeScans = new ArrayList<RangeScan>();
 					try {
 						String workload_name = workload_ranges[index].toString();
 						String name = null;
 						for (int range_i = 0; range_i < range_names.length; range_i++) {
-							Object[] params = (prep_ranges.subList(50000*range_i, 50000*(range_i+1)).toArray());
+							Object[] params = (prep_ranges.subList(max_workload*range_i, max_workload*(range_i+1)).toArray());
+							ArrayList<RangeScan> rangeScans = new ArrayList<RangeScan>();
 					    	for (int work_ind=0; work_ind < workload_ranges[index]; work_ind++) {
 					    		RangeScanParams param = (RangeScanParams)params[work_ind];
 					    		name = type_name + workload_name + param.name;
