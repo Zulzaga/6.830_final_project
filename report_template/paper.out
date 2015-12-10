@@ -3,11 +3,12 @@
 \BOOKMARK [2][-]{subsection.2.1}{Database Cracking}{section.2}% 3
 \BOOKMARK [2][-]{subsection.2.2}{Related Work}{section.2}% 4
 \BOOKMARK [1][-]{section.3}{System Overview}{}% 5
-\BOOKMARK [2][-]{subsection.3.1}{MiniDB overview}{section.3}% 6
-\BOOKMARK [2][-]{subsection.3.2}{Cracker Index implementation}{section.3}% 7
-\BOOKMARK [1][-]{section.4}{Experiments}{}% 8
-\BOOKMARK [2][-]{subsection.4.1}{Experiment Setup}{section.4}% 9
-\BOOKMARK [2][-]{subsection.4.2}{Performance Evaluation}{section.4}% 10
-\BOOKMARK [2][-]{subsection.4.3}{Comparison to MonetDB}{section.4}% 11
-\BOOKMARK [1][-]{section.5}{Discussion}{}% 12
-\BOOKMARK [1][-]{section.6}{Conclusion}{}% 13
+\BOOKMARK [2][-]{subsection.3.1}{MiniDB data structures}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.2}{Query processing}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.3}{Cracker Index implementation}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{Experiments}{}% 9
+\BOOKMARK [2][-]{subsection.4.1}{Experiment Setup}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.2}{Performance Evaluation}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.3}{Comparison to Sort based strategy and Traditional Indexes}{section.4}% 12
+\BOOKMARK [1][-]{section.5}{Discussion}{}% 13
+\BOOKMARK [1][-]{section.6}{Conclusion}{}% 14
