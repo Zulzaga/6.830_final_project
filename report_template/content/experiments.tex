@@ -1,44 +1,44 @@
 \section{Experiments}
 \subsection{Experiment Setup}
-Experiment Setup
 This section includes the detailed description of our experiment setup for analyzing the performances of different cracking index implementations. We implemented a simple single-column database implemented in Java for running our experiments on. Our main focus is to identify the impact of cracking only the SELECT operator. As mentioned in the previous section, we implemented three types of Cracker Indexes: AVL Tree, HashMap and Sorted List and analyzed the performances against simple scanning and sorted scanning techniques. We ran series of different sizes of queries on our dataset.
 
-Hardware
+\textbf{Hardware}
 The experiments are ran on Amazon AWS server and MIT Athena computers.
 
-Dataset
+\textbf{Dataset}
 Our simple database column contains one million distinct tuples of range 1 to 10${^6}$. 
 
-Workload
+\textbf{Workload}
 In analyzing the performances of different approaches, we explored workloads of size of 10000, 20000 and 50000 queries. 
 
-Query ranges
+\textbf{Query ranges}
 We explored three different types of query plans.
 Open range. Each query has a single endpoint. 
 Closed range. Each query has two endpoints.
 Mixed range. For each query, the range is randomly chosen to be either single or closed. The endpoints for the queries are chosen randomly from the range 1 to 10${^6}$.
 
-Selectivity
+\textbf{Selectivity}
 We tried studying the selectivity effects on the performance by changing the result size to be random, 100 and 1000.
 
-Cracking algorithms
+\textbf{Cracking algorithms}
 We recreated the two-piece cracking algorithm presented in the original paper with only single-sided predicate and apply the algorithm once on the column copy for open range queries and twice for closed range queries.
 
-Minimum Partition Size
+\textbf{Minimum Partition Size}
 The original paper mentioned about setting a minimum partition size threshold for cracker indexes, thus, no longer partitioning the column any further. The reason would be that the cracker index could become potentially huge same as the original column for non-repetitive queries and dividing columns further into small pieces would become highly costly. Following the idea, we implemented
 
 Describe the hardware (server, memory, OS, number of cores, etc)
 Describe how we timed things
 \subsection{Performance Evaluation}
 \subsection{Comparison to Sort based strategy and Traditional Indexes}
-Baseline
+
+\textbf{Baseline}
 For comparing the performances of our different cracking index implementations to traditional indexes and sort-based strategies, we further extended our database to have simple scanning and sorted column scanning to ии.
 
-Simple Scanning.
+\textbf{Simple Scanning}
 
 In this approach, we do not create a copy of the column and simply scan all tuples in the column ( would be O(N) linear time.)
 
-Sorted Column Scanning
+\textbf{Sorted Column Scanning}
 
 In this approach, we sort the column upon the first query and operates upon the sorted column copy for the queries. This would potentially take O(logN) time for finding the correct start and/or end ranges for the query.
 \label{sec:experiments}
