@@ -1,7 +1,13 @@
-\section{Background and related work}
+\section{Background}
 \label{sec:background}
+\subsection{Database Cracking Overview}
+
+Database cracking is a concept of adaptive column partitioning and sorting based on the query workloads and patterns. The core idea of database cracking is to partition the column according to each incoming query, therefore, effectively reducing the size of partitions as more queries arrive. Such self-organizational behavior is desired when there is no upfront knowledge of query patterns, which is required to preliminary create traditional indexes of the columns of interest.
+
+\subsection{Previous work}
+Database cracking is an active research topic, which is led by a group of researchers from CWI Amsterdam. The concept of self-organizing columns and query-dependent column partitioning was first presented in by Kersten and Manegold \cite{kersten_2005}. 
 Blablabla one Nobody ~\cite{schuhknecht_2014}.
 Blablabla two Nobody ~\cite{idreos_2007}.
 Blablabla three Nobody ~\cite{kersten_2005}.
-\subsection{Database Cracking}
-\subsection{Related Work}
+\subsection{Cracking Algorithms}
+
