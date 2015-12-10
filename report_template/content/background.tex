@@ -1,13 +1,10 @@
 \section{Background}
 \label{sec:background}
-\subsection{Database Cracking Overview}
-
-Database cracking is a concept of adaptive column partitioning and sorting based on the query workloads and patterns. The core idea of database cracking is to partition the column according to each incoming query, therefore, effectively reducing the size of partitions as more queries arrive. Such self-organizational behavior is desired when there is no upfront knowledge of query patterns, which is required to preliminary create traditional indexes of the columns of interest.
-
 \subsection{Previous work}
-Database cracking is an active research topic, which is led by a group of researchers from CWI Amsterdam. The concept of self-organizing columns and query-dependent column partitioning was first presented in by Kersten and Manegold \cite{kersten_2005}. 
-Blablabla one Nobody ~\cite{schuhknecht_2014}.
-Blablabla two Nobody ~\cite{idreos_2007}.
-Blablabla three Nobody ~\cite{kersten_2005}.
-\subsection{Cracking Algorithms}
+Database cracking is an active research topic, which is led by a group of researchers from CWI Amsterdam. The concept of dynamic and query-considerate data partitioning was first introduced in \cite{kersten_2005}. It was then further developed into a cracking system with mature architecture and describe in \cite{idreos_2007}. This system was built on top of MonetDB, a column oriented database system. The authors also presented cracking algorithms that are used to partition the data, as well as conducted experiments and obtained evidence that cracking improves query execution performance in a long term. The performance was measured as cumulative time of query execution. In \cite{schuhknecht_2014}, the authors raised questions regarding the effects on the performance of cracking algorithm selection and cracker index implementation. The database cracking has a lot of open questions and requires more experiments and research.\\
+The previous work done in the field defined the experimental setup of our project. Particularly, we have focused on column store databases in order to qualitatively compare our results with ones obtained in \cite{idreos_2007}, which was also used as a source of the cracker algorithm. Moreover, we conducted experiments to analyze the performance of different cracker index implementations to prove the hypothesis stated in \cite{schuhknecht_2014}.
+
+\subsection{Database Cracking Mechanism}
+The core idea of database cracking is to partition the column according to each incoming query, therefore, effectively reducing the size of partitions as more queries arrive. Such self-organizational behavior is desired when there is no upfront knowledge of query patterns, which would be required for preliminary creation of traditional indexes for the columns of interests. The database creates a copy of a column that was queried for the first time, we will call the copy column a cracker column. Tuple relocation and swapping only happen in the cracker column, leaving the original column intact. Each subsequent query results in further data partitioning and spends less time on cracking the values, as the partition ranges become smaller and smaller.
+
 
