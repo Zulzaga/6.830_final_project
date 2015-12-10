@@ -1,9 +1,28 @@
 \section{System Overview}
 In  order to analyze the performance effects of the database cracking, we have implemented our own small database system MiniDB. In this section we will describe components and implementation details of MiniDB.
+
+MiniDB is a simple single column database implemented in Java, where each table consists of a single uniquely named column. The database keeps a hash map with (column name, column object) pairs. The database tables store tuples as a list, and each tuple is a 32-bit integer. MiniDB maintains the following data structures: Simple Column, Sorted Column, Cracker Column, Cracker Index, Range Scan. 
+
 \label{sec:system}
 
-\subsection{MiniDB data structures}
-MiniDB is a simple single column database implemented in Java, where each table consists of a single uniquely named column. Database keeps a hash map with (column name, column object) pairs. The database tuples are 32-bit positive integers. Column tuples are stored as a list. MiniDB has three column types: Simple Column, Sorted Column, and Cracker Column. Simple Column does not maintain a specific tuple order and inserts a tuple to the end of the tuple list. In Simple Columns tuple lookup requires linear scan of the tuples list. Sorted Column preserves the order in the tuples list. Tuple lookup takes logarithmic time and is implemented as a binary search. Cracker Column stores tuples in a partially sorted list, that is, once its tuples are reorganized and partitioned into two sublists (one with all tuples whose values are less than or equal to the partition value and one with all tuples whose values are greater than the partition value). CrackerColumns cannot exist independently in our database, they can only be coupled with Simple Columns that support cracking and initialized after the first query. Cracker Columns contain same values as their corresponding Simple Columns, but in a different and constantly changing order. For each Cracker Column, there is a Cracker Index instance. The Cracker Index instances are necessary to keep most-up-to date information about all partitions of the Cracker Column tuples. Particularly, Cracker Index stores $(v, p)$ pairs, which indicate that all tuples located at the positions less than and including $p$ have values less that and including $v$.
+\subsection{MiniDB columns and indixes}
+
+
+Simple Columns represent database tables and store tuples. They do not maintain a specific tuple order and insert a tuple to the end of the tuple list. In Simple Columns tuple lookup requires linear scan of the tuples list. 
+
+Sorted Columns is another data structure that represents database tables  which preserves the order of the tuples. Tuple lookup takes logarithmic time and is implemented as a binary search. 
+
+CrackerColumns is a data structure that cannot exist independently in the database, they can only be coupled with Simple Columns that support cracking and initialized after the first query. Cracker Columns contain same values as their corresponding Simple Columns, but in a different and constantly changing order. Cracker Columns store tuples in a partially sorted list, that is, once its tuples are reorganized and partitioned into two sublists (one with all tuples whose values are less than or equal to the partition value and one with all tuples whose values are greater than the partition value) Each Cracker Column is supplemented with a  Cracker Index instance. 
+
+The Cracker Index instances are the data structures that are necessary to keep most-up-to date information about all partitions of the Cracker Column tuples. Particularly, Cracker Index stores $(v, p)$ pairs, which indicate that all tuples located at the positions less than and including $p$ have values less that and including $v$.
+
 \subsection{Query processing}
-MiniDB queries are the range scans that operate on a single column. Queries are implemented as RangeScan class, where each RangeScan instance stores the pointer to its column of interest
+MiniDB queries are the Range Scan objects that operate on a single column.Each Range Scan instance stores the pointer to its column of interest, endpoints of the value ranges, and the range sign, either one of $\leq$, $\textless$, $\geq$, $\textgreater$, $\textless \textless$, $\leq \textless$, $\textless \leq$, $\leq \leq$. Range Scan objects are essentially iterators on the values of their columns of interests. If the column does not support cracking, the iterator goes over all tuples and returns only those whose values belong to the specified range. Otherwise, they use cracking and simply iterate over all values that lie in a specified partition. 
+
+
 \subsection{Cracker Index implementation}
+Cracker Index functionality required such methods as insert value-position pair, find predecessor of value $v$, find successor of value $v$ and lookup of value $v$. We have implemented Cracker Index using three different underlying representations, AVL Tree, Sorted List and HashMap. Each of them has advantages and disadvantages in different aspects.
+
+\textbf{AVL Tree} stores value $v$ as a node key and a position $p$ as a node data. All of the operations on AVL Tree have logarithmic cost, which makes it a good candidates for large workloads. However, at the same time, the size of the tree grows with a number of queries, and maintaining the balance of the large tree might be costly.
+
+\textbf{HashMap} directly stores mapping between the value $v$ and the position $p$. The HashMap implementation is beneficial 
