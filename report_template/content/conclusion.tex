@@ -1,7 +1,6 @@
 \section{Conclusion}
-In consistent with findings already existing in the original paper, we found the cracking approach to outperform both sort bases strategy and traditional index under changing workload. As more and more queries arrive, the cost of physically reorganizing the data is spread over all the queries. In our workload environment, we found each of the different cracker index implementations to have certain pros and cons over each other, meanwhile all equally performing much faster to the baseline. 
+Consistent with findings in previous works \cite{idreos_2007, schuhknecht_2014}, we found that as more and more queries arrive, the cost of physical data reorganization is amortized over all the queries, and the cracking approach outperforms both sorted-column scanning and traditional index (simple scanning) under changing workloads. In our simplified environment, we found each of the different cracker index implementations to have certain benefits and drawbacks with respect to each other, but all perform much faster than the baseline cumulative execution times. Even though our simple database lacks most of the key features of existing real-world databases, we still were able to verify that the cracking approach is indeed more efficient for queries of the form ``SELECT value  FROM column WHERE value  $\textless$ $x$". 
 
-
-Overall, by using the cracker index the database automatically adapts to any workload and creates a re-organization that serve subsequent queries faster and faster. We believe that the database cracking idea has a great potential to revolutionize the traditional approach.
+Overall, by using the cracker index the database automatically adapts to any workload and creates a re-organization that serves subsequent queries faster and faster. We believe that the database cracking idea has a great potential to revolutionize the traditional approach.
 \label{sec:conclusion}
 

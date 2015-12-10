@@ -32,7 +32,7 @@
 \usepackage{xspace}
 \usepackage{array}
 
-
+\usepackage{indentfirst}
 \newcommand{\ie}{\emph{i.e.,}\xspace}
 \newcommand{\eg}{\emph{e.g.,}\xspace}
 \newcommand{\etal}{\emph{et~al.}\xspace}
@@ -66,10 +66,10 @@
 %% If you are submitting a paper to a conference for review with a double
 %% blind reviewing process, please replace the value ``0'' below with your
 %% OnlineID. Otherwise, you may safely leave it at ``0''.
-\onlineid{0}
+%\onlineid{0}
 
 %% declare the category of your paper, only shown in review mode
-\vgtccategory{Research}
+%\vgtccategory{Research}
 
 %% allow for this line if you want the electronic option to work properly
 \vgtcinsertpkg
@@ -79,7 +79,7 @@
 
 %% Paper title.
 
-\title{Database Cracking: Concept Evaluation}
+\title{Database Cracking:\\ Experiments on a Simplified Single-Column Database}
 
 %% This is how authors are specified in the journal style
 
@@ -98,11 +98,11 @@ Dana Mukusheva is MIT undergraduate. email: mukushev@mit.edu
 }
 
 %other entries to be set up for journal
-\shortauthortitle{Database Cracking: Concept Evaluation}
+\shortauthortitle{Database Cracking: Experiments on a Simplified Single-Column Database}
 %\shortauthortitle{Firstauthor \MakeLowercase{\textit{et al.}}: Paper Title}
 
 %% Abstract section.
-\abstract{???}
+\abstract{Database cracking is a concept of data partitioning and self-organization according to the query workload. It is a valuable behavior pattern in cases when there is no upfront information about future incoming queries and lack of idle time to maintain traditional database indexes. In particularly, database cracking does not require upfront knowledge about what columns are interesting and will be scanned and searched through. The core idea behind database cracking is that each incoming query partitions the data into smaller and smaller pieces; therefore, each query will take less and less time since it has to operate on a smaller data chunk. In our project we recreated algorithms and experiments from the original paper, "Database Cracking" by Idreos, 2007, in a simple single-column database. The results of our experiments proved that even in a simple environment, database cracking outperforms traditional database indexing in terms of cumulative query execution time. The contribution of our project is the exploration and performance analysis of different cracker index implementations, of workload variations, and of sensitivity to changing parameters such as query selectivity and minimum partition size.}
 
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
 %% please capitalize first letter and insert punctuation after last keyword
