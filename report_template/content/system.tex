@@ -11,7 +11,7 @@ MiniDB is a single column database implemented in Java, where each table consist
 
 \textbf{Cracker Column} is a data structure that cannot exist independently in the database, since it can only be coupled with a Simple Column instance that supports cracking. A Cracker Column instance is initialized and attached to a Simple Column instance when the latter is queried for the first time. Cracker Columns contain same values as their corresponding Simple Columns, but in a different and continuously changing order. Cracker Columns store tuples in a partially sorted list, which means that its tuples are reorganized and partitioned into two sublists, one with all tuples whose values are less than or equal to the partition value and one with all tuples whose values are greater than the partition value. Each Cracker Column instance is supplemented with a  Cracker Index instance. 
 
-\textbf{Cracker Index} is a data structures that is necessary to keep most-up-to date information about all partitions of the Cracker Column tuples. Particularly, a Cracker Index instance stores pairs in the form $(v, p)$, where $v$ indicates that all tuples located at the positions less than and including $p$ have values less that and including $v$.
+\textbf{Cracker Index} is a data structure that is necessary to keep most-up-to date information about all partitions of the Cracker Column tuples. Particularly, a Cracker Index instance stores pairs in the form $(v, p)$, where $v$ indicates that all tuples located at the positions less than and including $p$ have values less than or equal and including $v$.
 
 \subsection{Query processing}
 MiniDB queries are represented by the Range Scan objects that operate on a single column each. A Range Scan instance stores the pointer to its column of interest, endpoints of the value ranges, and the range sign, either one of $\leq$, $\textless$, $\geq$, $\textgreater$, $\textless \textless$, $\leq \textless$, $\textless \leq$, $\leq \leq$. Range Scan objects are essentially iterators on the values of their columns of interests. If the column does not support cracking, the iterator goes over all tuples and returns only those whose values belong to the specified range. Otherwise, they use cracking and simply iterate over all values that lie in a specified partition. 
@@ -20,11 +20,11 @@ MiniDB queries are represented by the Range Scan objects that operate on a singl
 \subsection{Cracker Index implementation}
 Cracker Index functionality requires methods such as insert value-position pair, find predecessor of value $v$, find successor of value $v$ and lookup position $p$ of value $v$. Predecessor/successor search is used to define partitions with the closest boundaries, which is the case when a new unseen query arrives. We have implemented Cracker Index using three different underlying representations, AVL Tree, Sorted List and HashMap. Each of them has advantages and disadvantages in different scenarios.
 
-\textbf{AVL Tree} stores value $v$ as a node key and a position $p$ as a node data. All of the operations on AVL Tree have logarithmic cost, which makes it a good candidates for large workloads. However, at the same time, the size of the tree grows with a number of queries, and maintaining the balance of the large tree might be costly.
+\textbf{AVL Tree} stores value $v$ as a node key and a position $p$ as a node data. All of the operations on AVL Tree have logarithmic cost, which makes it a good candidate for large workloads. However, at the same time, the size of the tree grows with the number of queries, and maintaining the balance of the large tree might be costly.
 
 \textbf{Hash Map} directly stores mapping between the value $v$ and the position $p$. The HashMap implementation is beneficial when all incoming queries are repetitive,and additional cracking is unnecessary, since the correct partition already exists. However, adding a new partition info into the index is costly, as predecessor/successor search takes linear time.
 
-\textbf{Sorted List} stores value-position pairs a list sorted on values. Preserving the order of the list is costly and takes linear time, however, cheap successor and predecessor search balances the query cost.
+\textbf{Sorted List} stores value-position pairs in a list sorted on values. Preserving the order of the list is costly and takes linear time, however, cheap successor and predecessor search balances the query cost.
 
 \begin{table}
 \begin{tabular}{| m{2em}  | m{2cm} | m{2cm}|  m{2cm} |} 
@@ -40,4 +40,4 @@ Cracker Index functionality requires methods such as insert value-position pair,
 \label{table:implementations}
 \end{table}
 
-In Table \ref{table:implementations} we summarized pros and cons for each Cracker Index implementation.
+In Table \ref{table:implementations} we summarize pros and cons for each Cracker Index implementation.
