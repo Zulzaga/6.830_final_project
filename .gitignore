@@ -5,6 +5,7 @@
 /matrix_multiply
 *.o
 report_template/content/*.log
+report_template/content/.DS_Store
 report_template/*.aux
 report_template/*.bbl
 report_template/*.blg
