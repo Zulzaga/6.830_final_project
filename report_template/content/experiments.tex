@@ -22,8 +22,8 @@ The predicates are chosen randomly from the range 1 to 10${^6}$.
 \caption{ADD CAPTION.}
 \label{fig:mixed20000}
 \end{figure}
-include graph- -------
 
+We have started our experiments by running 20000 queries with single, mixed, and double ranges, without particular choice of the selectivity or minimum partition size. Figure \ref{fig:mixed20000} shows the cumulative response time for each of our cracker index implementations, as well as baseline performances of simple scanning and sorting upfront strategies, all with mixed ranges. We observe that any cracking index implementation outperforms the simple scanning by at least twice. Initially high cracking cost is balanced out as the number of queries grow, suggesting that cracking allows faster query execution in the long term.
 \subsubsection{Varying minimum partition size}
 
 
